@@ -1,80 +1,83 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     const loadCarsBtn = document.getElementById('loadCarsBtn');
     const carList = document.getElementById('carList');
-    const carForm = document.getElementById('carForm');
-
-    // Function to fetch cars from the backend API
-    function fetchCars() {
-        fetch('/cars')
+    cars = [];
+    loadCarsBtn.addEventListener('click', () => {
+        fetch('http://localhost:3001/cars')
             .then(response => response.json())
-            .then(cars => {
-                // Clear existing car list
+            .then(data => {
+                cars = data;
                 carList.innerHTML = '';
-                // Display each car in the list
-                cars.forEach(car => {
-                    const carItem = document.createElement('div');
-                    carItem.classList.add('car-card');
-                    carItem.innerHTML = `
+                data.forEach((car, index) => {
+                    const carCard = document.createElement('div');
+                    carCard.classList.add('car-card');
+                    carCard.innerHTML = `
                         <h2>${car.make} ${car.model}</h2>
-                        <p>Year: ${car.year}</p>
-                        <p>Color: ${car.color}</p>
-                        <p>Price: ${car.price}</p>
-                        <button class="deleteBtn" data-id="${car.id}">Delete</button>
+                        <p><strong>Year:</strong> ${car.year}</p>
+                        <p><strong>Make:</strong> ${car.make}</p>
+                        <p><strong>Model:</strong> ${car.model}</p>
+                        <p><strong>Price:</strong> R${car.price}</p>
+                        <button class="btn btn-remove" data-index="${index}">Remove</button>
                     `;
-                    carList.appendChild(carItem);
+                    carList.appendChild(carCard);
                 });
             })
-            .catch(error => console.error('Error fetching cars:', error));
-    }
-
-    // Event listener for clicking "Load Cars" button
-    loadCarsBtn.addEventListener('click', function() {
-        fetchCars();
+            .catch(error => {
+                console.error('Error fetching car data:', error);
+            });
     });
-
-    // Event listener for submitting the car form
-    carForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        const formData = new FormData(carForm);
-        const newCar = {
-            make: formData.get('make'),
-            model: formData.get('model'),
-            year: formData.get('year'),
-            color: formData.get('color'),
-            price: formData.get('price')
-        };
-        fetch('/cars', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newCar)
-        })
+});
+function addCar(newCar) {
+    fetch('http://localhost:3001/cars', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newCar)
+    })
         .then(response => response.json())
-        .then(() => {
-            // Refresh car list after adding a new car
-            fetchCars();
-            // Reset form fields
-            carForm.reset();
+        .then(data => {
+            console.log('Success:', data);
+            //reload cars
+            // const loadCarsBtn = document.getElementById('loadCarsBtn');
+            loadCarsBtn.click();
         })
-        .catch(error => console.error('Error adding car:', error));
-    });
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
 
-    // Event delegation for delete buttons
-    carList.addEventListener('click', function(event) {
-        if (event.target.classList.contains('deleteBtn')) {
-            const carId = event.target.dataset.id;
-            fetch(`/cars/${carId}`, {
-                method: 'DELETE'
-            })
-            .then(() => {
-                // Refresh car list after deleting a car
-                fetchCars();
-            })
-            .catch(error => console.error('Error deleting car:', error));
-        }
-    });
+carForm.addEventListener('submit', event => {
+    event.preventDefault();
+    const make = document.getElementById('make').value;
+    const model = document.getElementById('model').value;
+    const year = document.getElementById('year').value;
+    const price = document.getElementById('price').value;
+    addCar({ make, model, year, price });
+    carForm.reset();
+});
 
-    // Load cars when the page loads
-    fetchCars();
+// Function to remove a car
+function removeCar(index) {
+    const carId = cars[index].id;
+    fetch(`http://localhost:3001/cars/${carId}`, {
+        method: 'DELETE'
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            //reload cars
+            // const loadCarsBtn = document.getElementById('loadCarsBtn');
+            loadCarsBtn.click();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+// Event delegation for remove buttons
+carList.addEventListener('click', event => {
+    if (event.target.classList.contains('btn-remove')) {
+        const index = event.target.dataset.index;
+        removeCar(index);
+    }
 });
