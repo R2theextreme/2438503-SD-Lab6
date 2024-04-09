@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.json())
             .then(data => {
                 cars = data;
-                carList.innerHTML = '';
+                carList.innerHTML = ''; 
                 data.forEach((car, index) => {
                     const carCard = document.createElement('div');
                     carCard.classList.add('car-card');
