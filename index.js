@@ -1,52 +1,65 @@
-//create cars api using express
 const express = require('express');
 const app = express();
-
-
+const cars = require('./cars.json');
 
 app.use(express.json());
 
-const cars = require('./cars.json');
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
 
-//get all cars
+// Get all cars
 app.get('/cars', (req, res) => {
     res.json(cars);
 });
 
-//get car by id
+// Get car by id
 app.get('/cars/:id', (req, res) => {
     const id = req.params.id;
     const car = cars.find(car => car.id === id);
-    res.json(car);
+    if (!car) {
+        res.status(404).json({ message: 'Car not found' });
+    } else {
+        res.json(car);
+    }
 });
 
-//update car
+// Update car
 app.put('/cars/:id', (req, res) => {
     const id = req.params.id;
     const updatedCar = req.body;
     const index = cars.findIndex(car => car.id === id);
-    cars[index] = updatedCar;
-    res.json(updatedCar);
+    if (index === -1) {
+        res.status(404).json({ message: 'Car not found' });
+    } else {
+        cars[index] = updatedCar;
+        res.json(updatedCar);
+    }
 });
 
-//delete car
+// Delete car
 app.delete('/cars/:id', (req, res) => {
     const id = req.params.id;
     const index = cars.findIndex(car => car.id === id);
-    cars.splice(index, 1);
-    res.json({ message: `Car with id ${id} deleted` });
+    if (index === -1) {
+        res.status(404).json({ message: 'Car not found' });
+    } else {
+        cars.splice(index, 1);
+        res.json({ message: `Car with id ${id} deleted` });
+    }
 });
 
-//add car
+// Add car
 app.post('/cars', (req, res) => {
-    console.log(req);
     const newCar = req.body;
-    console.log(newCar);
     cars.push(newCar);
-    res.json(newCar);
+    res.status(201).json(newCar);
 });
 
-//start app at localhost:3001
-app.listen(3001, () => {
-    console.log('Server started at http://localhost:3001');
+// Start the server
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+    console.log(`Server started at http://localhost:${PORT}`);
 });
