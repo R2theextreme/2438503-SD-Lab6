@@ -1,36 +1,13 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+module.exports = async function (context, req) {
+    context.log('JavaScript HTTP trigger function processed a request.');
 
-const app = express();
-const PORT = 3001;
+    const name = (req.query.name || (req.body && req.body.name));
+    const responseMessage = name
+        ? "Hello, " + name + ". This HTTP triggered function executed successfully."
+        : "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.";
 
-// Sample data for cars
-let cars = [];
-
-app.use(bodyParser.json());
-app.use(cors());
-
-// Route to get all cars
-app.get('/cars', (req, res) => {
-    res.json(cars);
-});
-
-// Route to add a new car
-app.post('/cars', (req, res) => {
-    const newCar = req.body;
-    cars.push(newCar);
-    res.json(newCar);
-});
-
-// Route to delete a car by ID (index in this case)
-app.delete('/cars/:id', (req, res) => {
-    const id = req.params.id;
-    cars.splice(id, 1);
-    res.send('Car deleted successfully');
-});
-
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+    context.res = {
+        // status: 200, /* Defaults to 200 */
+        body: responseMessage
+    };
+}
