@@ -58,6 +58,13 @@ carForm.addEventListener('submit', event => {
 });
 
 // Function to remove a car
+carList.addEventListener('click', event => {
+    if (event.target.classList.contains('btn-remove')) {
+        const index = parseInt(event.target.dataset.index);
+        removeCar(index);
+    }
+});
+
 function removeCar(index) {
     const carId = cars[index].id;
     fetch(`/cars/${carId}`, {
@@ -78,6 +85,7 @@ function removeCar(index) {
             console.error('Error:', error);
         });
 }
+
 
 // Event delegation for remove buttons
 carList.addEventListener('click', event => {
