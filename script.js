@@ -38,9 +38,6 @@ function addCar(newCar) {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            //reload cars
-            // const loadCarsBtn = document.getElementById('loadCarsBtn');
-            loadCarsBtn.click();
         })
         .catch(error => {
             console.error('Error:', error);
@@ -66,9 +63,6 @@ function removeCar(index) {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            //reload cars
-            // const loadCarsBtn = document.getElementById('loadCarsBtn');
-            loadCarsBtn.click();
         })
         .catch(error => {
             console.error('Error:', error);
