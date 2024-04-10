@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 function removeCar(index) {
     const carId = cars[index].id;
+    loadCarsBtn.click();
     fetch(`http://localhost:3001/cars/${carId}`, {
         method: 'DELETE'
     })
@@ -37,7 +38,6 @@ function removeCar(index) {
             console.log('Success:', data);
             //reload cars
             //const loadCarsBtn = document.getElementById('loadCarsBtn');
-            loadCarsBtn.click();
         })
         .catch(error => {
             console.error('Error:', error);
