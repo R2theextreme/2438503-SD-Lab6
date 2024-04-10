@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.json())
             .then(data => {
                 cars = data;
-                carList.innerHTML = ''; 
+                carList.innerHTML = '';
                 data.forEach((car, index) => {
                     const carCard = document.createElement('div');
                     carCard.classList.add('car-card');
@@ -39,7 +39,7 @@ function addCar(newCar) {
         .then(data => {
             console.log('Success:', data);
             //reload cars
-            const loadCarsBtn = document.getElementById('loadCarsBtn');
+            // const loadCarsBtn = document.getElementById('loadCarsBtn');
             loadCarsBtn.click();
         })
         .catch(error => {
@@ -63,27 +63,17 @@ function removeCar(index) {
     fetch(`http://localhost:3001/cars/${carId}`, {
         method: 'DELETE'
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to delete car');
-            }
-            // Remove the car from the cars array
-            cars.splice(index, 1);
-            // Remove the corresponding car card from the DOM
-            const carCardToRemove = document.querySelector(`.car-card[data-index="${index}"]`);
-            if (carCardToRemove) {
-                carCardToRemove.remove();
-            }
-            console.log('Car deleted successfully');
-            // After deleting the car, trigger the click event of the loadCarsBtn button
-            const loadCarsBtn = document.getElementById('loadCarsBtn');
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            //reload cars
+            // const loadCarsBtn = document.getElementById('loadCarsBtn');
             loadCarsBtn.click();
         })
         .catch(error => {
-            console.error('Error deleting car:', error);
+            console.error('Error:', error);
         });
 }
-
 // Event delegation for remove buttons
 carList.addEventListener('click', event => {
     if (event.target.classList.contains('btn-remove')) {
