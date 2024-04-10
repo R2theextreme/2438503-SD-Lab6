@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
             console.error('Error parsing cars.json:', error);
             res.status(500).send('Error parsing cars.json');
         }
-    });    
+    });
 });
 
 // Start the server
