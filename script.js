@@ -64,7 +64,7 @@ function addCar(newCar) {
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            
+            loadCarsBtn.click();
         })
         .catch(error => {
             console.error('Error:', error);
