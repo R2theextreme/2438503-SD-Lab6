@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.json())
             .then(data => {
                 cars = data;
-                carList.innerHTML = ''; 
                 data.forEach((car, index) => {
                     const carCard = document.createElement('div');
                     carCard.classList.add('car-card');
@@ -68,6 +67,7 @@ function removeCar(index) {
             console.log('Success:', data);
             //reload cars
            // const loadCarsBtn = document.getElementById('loadCarsBtn');
+            carList.innerHTML = ''; 
             loadCarsBtn.click();
         })
         .catch(error => {
