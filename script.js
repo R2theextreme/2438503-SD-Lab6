@@ -39,7 +39,7 @@ function addCar(newCar) {
         .then(data => {
             console.log('Success:', data);
             //reload cars
-            //const loadCarsBtn = document.getElementById('loadCarsBtn');
+            const loadCarsBtn = document.getElementById('loadCarsBtn');
             loadCarsBtn.click();
         })
         .catch(error => {
@@ -58,35 +58,22 @@ carForm.addEventListener('submit', event => {
 });
 
 // Function to remove a car
-carList.addEventListener('click', event => {
-    if (event.target.classList.contains('btn-remove')) {
-        const index = parseInt(event.target.dataset.index);
-        removeCar(index);
-    }
-});
-
 function removeCar(index) {
     const carId = cars[index].id;
-    fetch(`/cars/${carId}`, {
+    fetch(`http://localhost:3001/cars/${carId}`, {
         method: 'DELETE'
     })
         .then(response => response.json())
         .then(data => {
             console.log('Success:', data);
-            // Remove the car from the cars array
-            cars.splice(index, 1);
-            // Remove the corresponding car card from the DOM
-            const carCardToRemove = document.querySelector(`.car-card[data-index="${index}"]`);
-            if (carCardToRemove) {
-                carCardToRemove.remove();
-            }
+            //reload cars
+           // const loadCarsBtn = document.getElementById('loadCarsBtn');
+            loadCarsBtn.click();
         })
         .catch(error => {
             console.error('Error:', error);
         });
 }
-
-
 // Event delegation for remove buttons
 carList.addEventListener('click', event => {
     if (event.target.classList.contains('btn-remove')) {
