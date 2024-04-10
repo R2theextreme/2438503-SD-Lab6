@@ -14,6 +14,10 @@
       "type": "http",
       "direction": "out",
       "name": "res"
+    },
+    {
+      "entryPoint": "run"
     }
+    
   ]
 }

@@ -63,17 +63,27 @@ function removeCar(index) {
     fetch(`http://localhost:3001/cars/${carId}`, {
         method: 'DELETE'
     })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Success:', data);
-            //reload cars
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete car');
+            }
+            // Remove the car from the cars array
+            cars.splice(index, 1);
+            // Remove the corresponding car card from the DOM
+            const carCardToRemove = document.querySelector(`.car-card[data-index="${index}"]`);
+            if (carCardToRemove) {
+                carCardToRemove.remove();
+            }
+            console.log('Car deleted successfully');
+            // After deleting the car, trigger the click event of the loadCarsBtn button
             const loadCarsBtn = document.getElementById('loadCarsBtn');
             loadCarsBtn.click();
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Error deleting car:', error);
         });
 }
+
 // Event delegation for remove buttons
 carList.addEventListener('click', event => {
     if (event.target.classList.contains('btn-remove')) {
