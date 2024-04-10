@@ -67,7 +67,7 @@ function removeCar(index) {
         .then(data => {
             console.log('Success:', data);
             //reload cars
-           // const loadCarsBtn = document.getElementById('loadCarsBtn');
+            const loadCarsBtn = document.getElementById('loadCarsBtn');
             loadCarsBtn.click();
         })
         .catch(error => {
